@@ -1,0 +1,129 @@
+/* Parallax kontejner */
+.parallax-container {
+    height: 100vh;
+    width: 190vw;
+    overflow-x: scroll;
+    overflow-y: hidden;
+    position: relative;
+    touch-action: pan-x;
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;     /* Firefox */
+    background-color: black; /* nebo jakákoliv barva pozadí, kterou používáte */
+}
+
+/* Chrome, Safari and Opera */
+.parallax-container::-webkit-scrollbar {
+    display: none;
+}
+
+/* Základní nastavení pro všechny parallax vrstvy */
+.parallax-layer {
+    position: absolute;
+    height: 100vh;
+    width: 150%;
+    background-repeat: no-repeat;
+    background-position: left bottom;
+    background-size: contain;
+    left: 0%;
+    bottom: 0;
+}
+
+/* Základní nastavení pro stínové vrstvy */
+.parallax-shadow {
+    position: absolute;
+    height: 100vh;
+    width: 150%;
+    background-repeat: no-repeat;
+    background-position: left bottom;
+    background-size: contain;
+    left: 0%;
+    bottom: -50px;
+    filter: none;
+}
+
+/* Z-indexy a specifické nastavení pro vrstvy (seřazeno podle z-indexu) */
+.sky-layer { 
+    z-index: 10;  /* Nejnižší z-index pro pozadí */
+    background-image: url('../assets/parallax/layer7.png');
+}
+
+.mountains-shadow {
+    z-index: 20;
+    background-image: url('../assets/parallax/layer6-shadow.png');
+    
+}
+
+.mountains-layer { 
+    z-index: 30; 
+    background-image: url('../assets/parallax/layer6.png');
+}
+
+.trees-back-shadow {
+    z-index: 40;
+    background-image: url('../assets/parallax/layer5-shadow.png');
+}
+
+.trees-back-layer { 
+    z-index: 50; 
+    background-image: url('../assets/parallax/layer5.png');
+}
+
+.trees-middle-shadow {
+    z-index: 60;
+    background-image: url('../assets/parallax/layer4-shadow.png');
+}
+
+.trees-middle-layer { 
+    z-index: 70; 
+    background-image: url('../assets/parallax/layer4.png');
+}
+
+.bushes-shadow {
+    z-index: 80;
+    background-image: url('../assets/parallax/layer3-shadow.png');
+}
+
+.bushes-layer { 
+    z-index: 90; 
+    background-image: url('../assets/parallax/layer3.png');
+}
+
+.grass-shadow {
+    z-index: 100;
+    background-image: url('../assets/parallax/layer2-shadow.png');
+}
+
+.grass-layer { 
+    z-index: 110; 
+    background-image: url('../assets/parallax/layer2.png');
+}
+
+.front-shadow {
+    z-index: 120;
+    background-image: url('../assets/parallax/layer1-shadow.png');
+    bottom: 0;
+}
+
+.front-layer { 
+    z-index: 130;
+    background-image: url('../assets/parallax/layer1.png');
+}
+
+.top-layer {
+    z-index: 140; /* Nejvyšší vrstva pro brouky v popředí */
+    position: absolute;
+    height: 100vh;
+    width: 150%;
+    left: 0%;
+    bottom: 0;
+}
+
+/* Zabráníme scrollování na body */
+body {
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    background-color: black; /* nebo jakákoliv barva pozadí, kterou používáte */
+}
+
+

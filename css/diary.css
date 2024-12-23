@@ -1,0 +1,290 @@
+.diary-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.diary-overlay.hidden {
+    display: none;
+}
+
+.diary-content {
+    position: relative;
+    width: 70%;
+    height: 70%;
+    background-image: url('../assets/ui/denik1.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    padding: 20px;
+    will-change: transform;
+    transform: translateZ(0);
+}
+
+.diary-close {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    border: none;
+    background: none;
+    font-size: 24px;
+    cursor: pointer;
+}
+
+.diary-pages {
+    height: 100%;
+    position: relative;
+}
+
+.diary-page {
+    height: 100%;
+    width: 100%;
+    display: none;
+    transform: translateZ(0);
+    will-change: opacity;
+}
+
+.diary-page.active {
+    display: block;
+}
+
+.diary-nav {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    padding: 10px;
+    cursor: pointer;
+}
+
+.diary-nav.prev {
+    left: 20px;
+}
+
+.diary-nav.next {
+    right: 20px;
+}
+
+.diary-page img {
+    transition: all 0.3s ease-in-out;
+}
+
+.insect-silhouette,
+.insect-image,
+.insect-text-blurred,
+.insect-text-clear {
+    max-width: 100%;
+    height: auto;
+}
+
+/* Základní styly pro rozložení stránek */
+.diary-spread {
+    display: flex;
+    height: 100%;
+    gap: 40px;
+    background: none;
+}
+
+.diary-left, .diary-right {
+    flex: 1;
+    padding: 20px;
+    background: none;
+    border: none;
+    margin: 10px;
+    box-shadow: none;
+}
+
+/* Levá strana - pouze silueta brouka */
+.undiscovered .diary-left {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding-right: 30px;
+    padding-bottom: 30px;
+}
+
+.undiscovered .diary-left img {
+    display: block;
+    filter: brightness(0);
+    opacity: 0.5;
+    max-width: 100%;
+    height: auto;
+    transform: translate(55px, 20px);
+}
+
+/* Explicitně zakážeme otazník na levé straně */
+.undiscovered .diary-left::after {
+    display: none;
+    content: none;
+}
+
+/* Pravá strana - pouze otazník */
+.undiscovered .diary-right {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.undiscovered .diary-right h3,
+.undiscovered .diary-right p {
+    display: none;
+}
+
+.undiscovered .diary-right::after {
+    content: "?";
+    font-size: 120px;
+    color: rgba(0, 0, 0, 0.3);
+    font-family: "Courier New", monospace;
+    font-weight: bold;
+}
+
+/* Odstraníme všechny potenciálně konfliktní styly */
+.undiscovered .insect-illustration::after {
+    content: none;
+    display: none;
+}
+
+.undiscovered .diary-left .insect-illustration::after {
+    content: none;
+    display: none;
+}
+
+/* Základní velikost a pozice pro všechny brouky */
+.diary-left img {
+    max-width: 100%;
+    height: auto;
+    transform: translate(55px, 20px);
+    display: block;
+}
+
+/* Speciální velikost pro všechny brouky kromě stonožky */
+.diary-page:not([data-page="4"]) .diary-left img {
+    max-width: 125% !important;
+}
+
+/* Extra zvětšení pro brouka 1 */
+.diary-spread .diary-page[data-page="1"] .diary-left img {
+    max-width: 145% !important;
+}
+
+/* Siluety - zachováme stejné pozicování a velikosti */
+.undiscovered .diary-left img {
+    display: block;
+    filter: brightness(0);
+    opacity: 0.35;
+    max-width: 100%;
+    height: auto;
+    transform: translate(55px, 20px);
+}
+
+/* Speciální velikost pro siluety všech brouků kromě stonožky */
+.undiscovered .diary-page:not([data-page="4"]) .diary-left img {
+    max-width: 125% !important;
+}
+
+/* Extra zvětšení pro siluetu brouka 1 */
+.undiscovered .diary-spread .diary-page[data-page="1"] .diary-left img {
+    max-width: 145% !important;
+}
+
+/* Sjednocené zarovnání pro oba stavy */
+.diary-left, 
+.undiscovered .diary-left {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding-right: 30px;
+    padding-bottom: 30px;
+}
+
+/* Styly pro volume control */
+.volume-control {
+    position: absolute;
+    right: calc(50% - 250px);
+    transform: translateX(50%);
+    bottom: 120px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    z-index: 1001;
+    padding: 10px;
+    background: none;
+}
+
+.volume-icon {
+    display: none;
+}
+
+.volume-slider {
+    width: 150px;
+    height: 30px;
+    -webkit-appearance: none;
+    background: url('../assets/ui/cara.png') no-repeat center;
+    background-size: 100% 4px;
+    outline: none;
+}
+
+/* Stylování "tečky" pro různé prohlížeče */
+.volume-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 36px;
+    height: 36px;
+    background: url('../assets/ui/zvuk.png') no-repeat center;
+    background-size: contain;
+    cursor: pointer;
+    border: none;
+}
+
+.volume-slider::-moz-range-thumb {
+    width: 36px;
+    height: 36px;
+    background: url('../assets/ui/zvuk.png') no-repeat center;
+    background-size: contain;
+    cursor: pointer;
+    border: none;
+}
+
+.volume-slider::-ms-thumb {
+    width: 36px;
+    height: 36px;
+    background: url('../assets/ui/zvuk.png') no-repeat center;
+    background-size: contain;
+    cursor: pointer;
+    border: none;
+}
+
+/* Odstraníme původní track v různých prohlížečích */
+.volume-slider::-webkit-slider-runnable-track {
+    -webkit-appearance: none;
+    background: transparent;
+}
+
+.volume-slider::-moz-range-track {
+    background: transparent;
+}
+
+.volume-slider::-ms-track {
+    background: transparent;
+    border: none;
+    color: transparent;
+}
+
+.diary-right .insect-text {
+    max-width: 100%;
+    height: auto;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    transform: translateX(-10%);
+}
+
+.diary-page:not(.undiscovered) .diary-right .insect-text {
+    opacity: 1;
+}

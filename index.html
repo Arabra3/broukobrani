@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Broukobraní</title>
+    <link rel="stylesheet" href="css/parallax.css">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/diary.css">
+</head>
+<body>
+    <div class="parallax-container">
+        <div class="sky-layer parallax-layer"></div>
+        
+        <div class="mountains-layer parallax-layer"></div>
+        <div class="mountains-shadow parallax-shadow"></div>
+        
+        <div class="trees-back-layer parallax-layer"></div>
+        <div class="trees-back-shadow parallax-shadow"></div>
+        
+        <div class="trees-middle-layer parallax-layer"></div>
+        <div class="trees-middle-shadow parallax-shadow"></div>
+        
+        <div class="bushes-layer parallax-layer"></div>
+        <div class="bushes-shadow parallax-shadow"></div>
+        
+        <div class="grass-layer parallax-layer"></div>
+        <div class="grass-shadow parallax-shadow"></div>
+        
+        <div class="front-layer parallax-layer"></div>
+        <div class="front-shadow parallax-shadow"></div>
+    </div>
+
+    <div class="diary-icon"><img src="assets/ui/ikonaDenik.png" alt="Deník"></div>
+    <div id="diary" class="diary-overlay hidden">
+        <div class="diary-content">
+            <button class="diary-close"><img src="assets/ui/krizek.png" alt="Zavřít"></button>
+            <div class="diary-pages">
+                <div class="diary-page active" data-page="1">
+                    <div class="diary-spread">
+                        <div class="diary-left">
+                            <h2>Můj deník hmyzu</h2>
+                            <p>Vítej v mém deníku, kde si zapisuji všechny objevené brouky!</p>
+                        </div>
+                        <div class="diary-right">
+                            <p>Počet nalezených brouků: <span id="found-count">0</span>/9</p>
+                            <p>Hledej brouky v krajině a zapisuj si je do deníku!</p>
+                        </div>
+                    </div>
+                    <div class="volume-control">
+                        <img src="assets/ui/volume-icon.png" alt="Volume" class="volume-icon">
+                        <input type="range" min="0" max="100" value="50" class="volume-slider" id="volumeSlider">
+                    </div>
+                </div>
+                
+                <div class="diary-page undiscovered" data-page="2" data-insect="insect1">
+                    <div class="diary-spread">
+                        <div class="diary-left">
+                            <div class="insect-illustration">
+                                <img src="assets/diary/insect1Diary.png" alt="Křižák červený">
+                            </div>
+                        </div>
+                        <div class="diary-right">
+                            <img src="assets/diary/insect1text.png" alt="Popis křižáka" class="insect-text">
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="diary-page undiscovered" data-page="3" data-insect="insect2">
+                    <div class="diary-spread">
+                        <div class="diary-left">
+                            <div class="insect-illustration">
+                                <img src="assets/diary/insect2Diary.png" alt="Nosatec">
+                            </div>
+                        </div>
+                        <div class="diary-right">
+                            <img src="assets/diary/insect2text.png" alt="Popis nosatce" class="insect-text">
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="diary-page undiscovered" data-page="4" data-insect="insect3">
+                    <div class="diary-spread">
+                        <div class="diary-left">
+                            <div class="insect-illustration">
+                                <img src="assets/diary/insect3Diary.png" alt="Křižák banánový">
+                            </div>
+                        </div>
+                        <div class="diary-right">
+                            <img src="assets/diary/insect3text.png" alt="Popis křižáka banánového" class="insect-text">
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="diary-page undiscovered" data-page="5" data-insect="insect4">
+                    <div class="diary-spread">
+                        <div class="diary-left">
+                            <div class="insect-illustration">
+                                <img src="assets/diary/insect4Diary.png" alt="Stonožka">
+                            </div>
+                        </div>
+                        <div class="diary-right">
+                            <img src="assets/diary/insect4text.png" alt="Popis stonožky" class="insect-text">
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="diary-page undiscovered" data-page="6" data-insect="insect5">
+                    <div class="diary-spread">
+                        <div class="diary-left">
+                            <div class="insect-illustration">
+                                <img src="assets/diary/insect5Diary.png" alt="Motýl zelený">
+                            </div>
+                        </div>
+                        <div class="diary-right">
+                            <img src="assets/diary/insect5text.png" alt="Popis motýla zeleného" class="insect-text">
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="diary-page undiscovered" data-page="7" data-insect="insect6">
+                    <div class="diary-spread">
+                        <div class="diary-left">
+                            <div class="insect-illustration">
+                                <img src="assets/diary/insect6Diary.png" alt="Šváb obecný">
+                            </div>
+                        </div>
+                        <div class="diary-right">
+                            <img src="assets/diary/insect6text.png" alt="Popis švába obecného" class="insect-text">
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="diary-page undiscovered" data-page="8" data-insect="insect7">
+                    <div class="diary-spread">
+                        <div class="diary-left">
+                            <div class="insect-illustration">
+                                <img src="assets/diary/insect7Diary.png" alt="Nosorožík">
+                            </div>
+                        </div>
+                        <div class="diary-right">
+                            <img src="assets/diary/insect7text.png" alt="Popis nosorožíka" class="insect-text">
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="diary-page undiscovered" data-page="9" data-insect="insect8">
+                    <div class="diary-spread">
+                        <div class="diary-left">
+                            <div class="insect-illustration">
+                                <img src="assets/diary/insect8Diary.png" alt="Motýl červený">
+                            </div>
+                        </div>
+                        <div class="diary-right">
+                            <img src="assets/diary/insect8text.png" alt="Popis motýla červeného" class="insect-text">
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="diary-page undiscovered" data-page="10" data-insect="insect9">
+                    <div class="diary-spread">
+                        <div class="diary-left">
+                            <div class="insect-illustration">
+                                <img src="assets/diary/insect9Diary.png" alt="Nový brouk">
+                            </div>
+                        </div>
+                        <div class="diary-right">
+                            <img src="assets/diary/insect9text.png" alt="Popis nového brouka" class="insect-text">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <button class="diary-nav prev"><img src="assets/ui/sipkaLeft.png" alt="Předchozí"></button>
+            <button class="diary-nav next"><img src="assets/ui/sipkaRight.png" alt="Další"></button>
+        </div>
+    </div>
+
+    <script src="js/parallax.js"></script>
+    <script src="js/diary.js"></script>
+    <script src="js/insects.js"></script>
+    <audio id="ambient-sound" loop>
+        <source src="assets/sounds/ambient.wav" type="audio/wav">
+    </audio>
+    <script src="js/audio.js"></script>
+</body>
+</html>
