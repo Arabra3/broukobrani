@@ -300,5 +300,19 @@ document.addEventListener('DOMContentLoaded', function() {
         const offset = scrollLeft * speed;
         layer.style.transform = `translate3d(-${offset}px, 0, 0)`;
     });
+    
+    // Použití will-change pro lepší vykreslování
+    layers.forEach(layer => {
+        layer.style.willChange = 'transform';
+    });
+    
+    // Cleanup když není potřeba
+    window.addEventListener('scroll', () => {
+        if (!isScrolling) {
+            layers.forEach(layer => {
+                layer.style.willChange = 'auto';
+            });
+        }
+    }, { passive: true });
 });
 

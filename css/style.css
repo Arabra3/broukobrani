@@ -346,3 +346,10 @@ body {
     transform-origin: center center;
 }
 
+/* Přidat hardware akceleraci pro animované elementy */
+.diary-icon, .diary-nav, .parallax-layer {
+    transform: translateZ(0);
+    backface-visibility: hidden;
+    perspective: 1000px;
+}
+

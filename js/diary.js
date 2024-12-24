@@ -25,6 +25,12 @@ class Diary {
         
         // Automaticky otevřeme deník při načtení
         this.openDiary();
+        
+        // Přidejte lazy loading pro obrázky v deníku
+        const diaryImages = document.querySelectorAll('.diary-page img');
+        diaryImages.forEach(img => {
+            img.loading = 'lazy';
+        });
     }
     
     openDiary() {

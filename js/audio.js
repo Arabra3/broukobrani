@@ -40,6 +40,10 @@ class AudioManager {
         
         this.isPlaying = false;
         this.initializeAudio();
+        
+        // Načítat zvuky až když jsou potřeba
+        this.sounds = {};
+        this.loadQueue = new Set();
     }
 
     updateAllVolumes(baseVolume) {
@@ -129,6 +133,16 @@ class AudioManager {
         this.writings[this.currentWritingIndex].play()
             .catch(error => console.error('Error playing writing sound:', error));
         this.currentWritingIndex = (this.currentWritingIndex + 1) % this.writings.length;
+    }
+
+    preloadSound(key, url) {
+        if (!this.loadQueue.has(key)) {
+            this.loadQueue.add(key);
+            const audio = new Audio();
+            audio.src = url;
+            audio.preload = 'auto';
+            this.sounds[key] = audio;
+        }
     }
 }
 

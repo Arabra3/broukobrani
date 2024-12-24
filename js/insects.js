@@ -121,13 +121,21 @@ class InsectSystem {
             button.className = 'insect-button';
             button.id = insect.id;
             
+            // Vytvoříme a nastavíme obrázek s lazy loadingem
             const img = document.createElement('img');
+            img.loading = 'lazy';
             img.src = insect.image;
             img.alt = insect.name;
             button.appendChild(img);
             
             // Přidáme hover efekty
             button.addEventListener('mouseenter', () => {
+                // Načíst hover obrázek až při prvním hover
+                if (!button._hoverLoaded) {
+                    const hoverImg = new Image();
+                    hoverImg.src = insect.hoverImage;
+                    button._hoverLoaded = true;
+                }
                 img.src = insect.hoverImage;
             });
             
@@ -145,7 +153,7 @@ class InsectSystem {
                     left: `${(insect.position.x / 100) * 3840}px`,
                     top: `${(insect.position.y / 100) * 1080}px`,
                     pointerEvents: 'all',
-                    zIndex: insect.layer,  // Použijeme přímo hodnotu z parallax vrstev
+                    zIndex: insect.layer,
                     background: 'none',
                     border: 'none',
                     padding: '0',
