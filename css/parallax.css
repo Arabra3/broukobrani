@@ -44,7 +44,7 @@
 /* Z-indexy a specifické nastavení pro vrstvy (seřazeno podle z-indexu) */
 .sky-layer { 
     z-index: 10;  /* Nejnižší z-index pro pozadí */
-    background-image: url('../assets/parallax/layer7.png');
+    background-image: url('../assets/parallax/layer7.jpg');
 }
 
 .mountains-shadow {

@@ -3,20 +3,20 @@ class AudioManager {
         console.log('Initializing AudioManager...');
         
         // Inicializace ambientu
-        this.ambient = document.getElementById('ambient-sound');
+        this.ambient = new Audio('assets/sounds/ambient.mp3');
         
         // Pole pro zvuky otáčení stránek
         this.pageturns = [
-            new Audio('assets/sounds/turnPage1.wav'),
-            new Audio('assets/sounds/turnPage2.wav'),
+            new Audio('assets/sounds/turnPage1.mp3'),
+            new Audio('assets/sounds/turnPage2.mp3'),
             new Audio('assets/sounds/turnPage3.mp3')
         ];
         
         // Pole pro zvuky psaní
         this.writings = [
-            new Audio('assets/sounds/writing1.wav'),
-            new Audio('assets/sounds/writing2.wav'),
-            new Audio('assets/sounds/writing3.wav')
+            new Audio('assets/sounds/writing1.mp3'),
+            new Audio('assets/sounds/writing2.mp3'),
+            new Audio('assets/sounds/writing3.mp3')
         ];
         
         // Indexy pro sledování, který zvuk je na řadě
@@ -24,8 +24,8 @@ class AudioManager {
         this.currentWritingIndex = 0;
         
         // Zvuky knihy
-        this.bookClose = new Audio('assets/sounds/bookClose.wav');
-        this.bookOpen = new Audio('assets/sounds/bookOpen.wav');
+        this.bookClose = new Audio('assets/sounds/bookClose.mp3');
+        this.bookOpen = new Audio('assets/sounds/bookOpen.mp3');
         
         if (!this.ambient) {
             console.error('Ambient audio element not found!');
