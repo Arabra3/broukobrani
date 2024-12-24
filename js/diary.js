@@ -24,7 +24,7 @@ class Diary {
         this.initializeVolumeControl();
         
         // Automaticky otevřeme deník při načtení
-        this.openDiary();
+        this.goToPage(1);
         
         // Přidejte lazy loading pro obrázky v deníku
         const diaryImages = document.querySelectorAll('.diary-page img');
@@ -38,7 +38,7 @@ class Diary {
         window.audioManager?.playBookOpen();
         
         // Ujistíme se, že jsme na první stránce
-        this.showPage(1);
+        this.goToPage(1);
     }
     
     initializeListeners() {
@@ -189,17 +189,43 @@ class Diary {
 }
 
 function discoverInsect(insectId) {
+    console.log('Objevení brouka:', insectId); // Debug log
     const page = document.querySelector(`.diary-page[data-insect="${insectId}"]`);
     if (page) {
+        console.log('Nalezena stránka brouka, odstraňuji undiscovered'); // Debug log
         page.classList.remove('undiscovered');
+        
+        // Přímé volání updateFoundCount
         updateFoundCount();
+    } else {
+        console.error('Stránka pro brouka nebyla nalezena:', insectId);
     }
 }
 
 function updateFoundCount() {
-    const foundCount = document.querySelectorAll('.diary-page:not(.undiscovered)').length - 1;
-    document.getElementById('found-count').textContent = foundCount;
+    // Počítáme pouze stránky s brouky (od stránky 2 dál), které nejsou undiscovered
+    const pages = document.querySelectorAll('.diary-page:not([data-page="1"]):not(.undiscovered)');
+    const foundCount = pages.length;
+    console.log('Nalezené stránky:', pages); // Debug log
+    console.log('Počet nalezených brouků:', foundCount); // Debug log
+    
+    const countElement = document.getElementById('found-count-number');
+    if (countElement) {
+        const newSrc = `assets/ui/cislo${foundCount}.png`;
+        console.log('Nastavuji nový obrázek:', newSrc); // Debug log
+        countElement.src = newSrc;
+        countElement.alt = `${foundCount}`;
+    } else {
+        console.error('Element počítadla nebyl nalezen!');
+    }
 }
+
+// Přidáme volání updateFoundCount do insects.js
+window.addEventListener('insectCollected', (event) => {
+    console.log('Event insectCollected zachycen'); // Debug log
+    const insectId = event.detail.insectId;
+    discoverInsect(insectId);
+});
 
 let diaryInstance;
 
@@ -207,4 +233,5 @@ document.addEventListener('DOMContentLoaded', () => {
     console.log('DOM loaded, creating diary...');
     diaryInstance = new Diary();
     window.diary = diaryInstance;
+    updateFoundCount();
 });

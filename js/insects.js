@@ -216,6 +216,12 @@ class InsectSystem {
         
         // Nastavíme poslední nalezený hmyz v deníku
         window.diary?.setLastFoundInsect(insect.id);
+        
+        // Vyvolání události
+        const event = new CustomEvent('insectCollected', {
+            detail: { insectId: insect.id }
+        });
+        window.dispatchEvent(event);
     }
 
     updateDiary(insectId) {

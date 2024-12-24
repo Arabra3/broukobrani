@@ -314,3 +314,22 @@
     right: calc(50% + 50px);
     transform: translateX(50%);
 }
+
+/* Styly pro počítadlo */
+.counter-wrapper {
+    position: absolute;
+    right: 100px;
+    top: 26%;
+    transform: translateY(-50%);
+    display: flex;
+    align-items: center;
+    gap: 0px;
+}
+
+.counter-number,
+.counter-slash,
+.counter-total {
+    height: 40px;
+    width: auto;
+    margin: -8px;
+}
