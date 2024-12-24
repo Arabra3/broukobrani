@@ -205,12 +205,11 @@
     padding-bottom: 30px;
 }
 
-/* Styly pro volume control */
-.volume-control {
-    position: absolute;
-    right: calc(50% - 250px);
-    transform: translateX(50%);
-    bottom: 120px;
+/* Styly pro volume control - kompletně přepsané */
+.diary-content .volume-control {
+    position: absolute !important;
+    right: 240px !important; /* Výrazně větší hodnota pro posun doleva */
+    bottom: 80px !important;
     display: flex;
     align-items: center;
     gap: 10px;
@@ -298,7 +297,7 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    transform: translateX(-50px);
+    transform: translateX(-1px);
 }
 
 .intro-page-image {
@@ -308,18 +307,18 @@
 }
 
 /* Upravíme pozici volume control pro úvodní stránku s posunem */
-.diary-page[data-page="1"] .volume-control {
-    position: absolute;
-    bottom: 20px;
-    right: calc(50% + 50px);
+.diary-page[data-page="1"] .diary-content .volume-control {
+    position: absolute !important;
+    bottom: 20px !important;
+    right: 350px !important; /* Výrazně větší hodnota */
     transform: translateX(50%);
 }
 
 /* Styly pro počítadlo */
 .counter-wrapper {
     position: absolute;
-    right: 100px;
-    top: 26%;
+    right: 130px;
+    top: 21%;
     transform: translateY(-50%);
     display: flex;
     align-items: center;
