@@ -41,18 +41,13 @@
             <div class="diary-pages">
                 <div class="diary-page active" data-page="1">
                     <div class="diary-spread">
-                        <div class="diary-left">
-                            <h2>Můj deník hmyzu</h2>
-                            <p>Vítej v mém deníku, kde si zapisuji všechny objevené brouky!</p>
+                        <div class="diary-content-wrapper">
+                            <img src="assets/diary/uvodnistrana.png" alt="Úvodní strana deníku" class="intro-page-image">
+                            <div class="volume-control">
+                                <img src="assets/ui/volume-icon.png" alt="Volume" class="volume-icon">
+                                <input type="range" min="0" max="100" value="50" class="volume-slider" id="volumeSlider">
+                            </div>
                         </div>
-                        <div class="diary-right">
-                            <p>Počet nalezených brouků: <span id="found-count">0</span>/9</p>
-                            <p>Hledej brouky v krajině a zapisuj si je do deníku!</p>
-                        </div>
-                    </div>
-                    <div class="volume-control">
-                        <img src="assets/ui/volume-icon.png" alt="Volume" class="volume-icon">
-                        <input type="range" min="0" max="100" value="50" class="volume-slider" id="volumeSlider">
                     </div>
                 </div>
                 
