@@ -197,9 +197,9 @@ document.addEventListener('DOMContentLoaded', function() {
             
             const newDirection = e.key === 'ArrowRight' ? 1 : -1;
             
-            // Pokud měníme směr, okamžitě resetujeme rychlost
+            // Zachováme okamžitou reakci na změnu směru
             if (newDirection !== currentDirection) {
-                scrollVelocity = newDirection * 8; // Okamžitý start v novém směru
+                scrollVelocity = newDirection * 6; // Nižší počáteční rychlost
             }
             
             currentDirection = newDirection;
@@ -225,10 +225,10 @@ document.addEventListener('DOMContentLoaded', function() {
         if (!isAutoScrolling) return;
         
         if (keyPressed) {
-            const acceleration = 0.5;
-            const maxSpeed = 25;
+            const acceleration = 0.35; // Jemnější akcelerace
+            const maxSpeed = 20; // Mírně nižší maximální rychlost
             
-            // Zajistíme, že rychlost má vždy správný směr
+            // Kontrola správného směru
             if (Math.sign(scrollVelocity) !== currentDirection) {
                 scrollVelocity = currentDirection * Math.abs(scrollVelocity);
             }
@@ -241,10 +241,11 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             }
         } else {
-            scrollVelocity *= 0.95;
+            // Jemnější dojezd
+            scrollVelocity *= 0.97; // Vyšší hodnota = delší dojezd
         }
         
-        if (Math.abs(scrollVelocity) > 0.1) {
+        if (Math.abs(scrollVelocity) > 0.05) { // Snížený práh pro delší dojezd
             const isAtEdge = updatePosition(scrollVelocity);
             
             if (!isAtEdge) {
