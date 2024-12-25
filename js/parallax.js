@@ -137,6 +137,14 @@ document.addEventListener('DOMContentLoaded', function() {
         
         container.scrollLeft = scrollLeft;
         
+        // Vyvolání události pro scroll indicator
+        const scrollEvent = new CustomEvent('scroll-update', {
+            detail: {
+                scrollLeft: scrollLeft
+            }
+        });
+        window.dispatchEvent(scrollEvent);
+        
         layers.forEach((layer, index) => {
             const speed = index * 0.1; //speed je zavisla na indexu vrstvy
             const offset = scrollLeft * speed; 
@@ -536,6 +544,10 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
     window.dispatchEvent(scrollEvent);
+
+    // Po inicializaci všech komponent vyšleme událost
+    const readyEvent = new CustomEvent('parallax-ready');
+    document.dispatchEvent(readyEvent);
 });
 
 

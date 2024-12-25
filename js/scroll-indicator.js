@@ -3,34 +3,32 @@ class ScrollIndicator {
         this.thumb = document.querySelector('.scroll-thumb');
         this.track = document.querySelector('.scroll-track');
         
-        // Reference na parallax bounds
-        this.minX = window.parallaxInstance?.bounds.minX || 0;
-        this.maxX = window.parallaxInstance?.bounds.maxX || 0;
-        
+        document.addEventListener('parallax-ready', this.initBounds.bind(this));
         this.updatePosition = this.updatePosition.bind(this);
-        this.init();
     }
     
-    init() {
-        // Nastavení šířky thumb podle poměru viewport/celková šířka
-        const viewportWidth = window.innerWidth;
-        const totalWidth = this.maxX - this.minX;
-        const thumbWidthPercent = (viewportWidth / totalWidth) * 100;
-        this.thumb.style.width = `${Math.min(100, thumbWidthPercent)}%`;
+    initBounds() {
+        const maxScroll = window.innerWidth * 0.42;
+        this.minX = 0;
+        this.maxX = maxScroll;
         
-        // Přidání event listeneru pro aktualizaci pozice
         window.addEventListener('scroll-update', this.updatePosition);
     }
     
     updatePosition(event) {
-        const currentX = event.detail.x || 0;
+        const currentX = event.detail.scrollLeft || 0;
         const totalWidth = this.maxX - this.minX;
+        const trackWidth = this.track.offsetWidth;
+        const thumbWidth = this.thumb.offsetWidth;
         
-        // Výpočet pozice v procentech
-        const position = ((currentX - this.minX) / totalWidth) * 100;
+        // Vypočítáme maximální posun (šířka tracku mínus šířka thumbu)
+        const maxTranslate = trackWidth - thumbWidth;
         
-        // Aktualizace pozice thumbu
-        this.thumb.style.transform = `translateX(${position}%)`;
+        // Vypočítáme pozici v pixelech
+        const position = (currentX / totalWidth) * maxTranslate;
+        
+        // Aplikujeme transformaci na thumb
+        this.thumb.style.transform = `translateX(${position}px)`;
     }
 }
 
