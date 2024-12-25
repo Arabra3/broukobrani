@@ -164,7 +164,7 @@ document.addEventListener('DOMContentLoaded', function() {
         
         if (!isAutoScrolling) {
             isAutoScrolling = true;
-            autoScroll();
+            requestAnimationFrame(autoScroll);
         }
     }
     
@@ -187,24 +187,79 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
     
+    let keyPressed = false;
+    let currentDirection = 0;
+
     document.addEventListener('keydown', (e) => {
         if (e.key === 'ArrowRight' || e.key === 'ArrowLeft') {
             e.preventDefault();
+            keyPressed = true;
             
-            const direction = e.key === 'ArrowRight' ? 1 : -1;
-            const normalizedDelta = direction * 65;
+            const newDirection = e.key === 'ArrowRight' ? 1 : -1;
             
-            const targetVelocity = Math.sign(normalizedDelta) * 
-                Math.min(Math.abs(normalizedDelta * 0.805), 85);
+            // Pokud měníme směr, okamžitě resetujeme rychlost
+            if (newDirection !== currentDirection) {
+                scrollVelocity = newDirection * 8; // Okamžitý start v novém směru
+            }
             
-            scrollVelocity = scrollVelocity * 0.915 + targetVelocity * 0.085;
+            currentDirection = newDirection;
             
             if (!isAutoScrolling) {
                 isAutoScrolling = true;
-                autoScroll();
+                requestAnimationFrame(smoothScroll);
             }
         }
     });
+
+    document.addEventListener('keyup', (e) => {
+        if (e.key === 'ArrowRight' || e.key === 'ArrowLeft') {
+            if ((e.key === 'ArrowRight' && currentDirection === 1) ||
+                (e.key === 'ArrowLeft' && currentDirection === -1)) {
+                keyPressed = false;
+                currentDirection = 0;
+            }
+        }
+    });
+
+    function smoothScroll() {
+        if (!isAutoScrolling) return;
+        
+        if (keyPressed) {
+            const acceleration = 0.5;
+            const maxSpeed = 25;
+            
+            // Zajistíme, že rychlost má vždy správný směr
+            if (Math.sign(scrollVelocity) !== currentDirection) {
+                scrollVelocity = currentDirection * Math.abs(scrollVelocity);
+            }
+            
+            if (Math.abs(scrollVelocity) < maxSpeed) {
+                scrollVelocity += currentDirection * acceleration;
+                
+                if (Math.abs(scrollVelocity) > maxSpeed) {
+                    scrollVelocity = currentDirection * maxSpeed;
+                }
+            }
+        } else {
+            scrollVelocity *= 0.95;
+        }
+        
+        if (Math.abs(scrollVelocity) > 0.1) {
+            const isAtEdge = updatePosition(scrollVelocity);
+            
+            if (!isAtEdge) {
+                requestAnimationFrame(smoothScroll);
+            } else {
+                scrollVelocity = 0;
+                isAutoScrolling = false;
+                currentDirection = 0;
+            }
+        } else {
+            scrollVelocity = 0;
+            isAutoScrolling = false;
+            currentDirection = 0;
+        }
+    }
     
     // Ponechat pouze wheel event listener
     container.addEventListener('wheel', handleWheel, { passive: false });
