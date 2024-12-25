@@ -1,3 +1,6 @@
+let hasShownPopup = false;
+const popup = document.getElementById('scroll-popup');
+
 class Diary {
     constructor() {
         console.log('Initializing diary...');
@@ -82,6 +85,35 @@ class Diary {
         if (!this.diary.classList.contains('hidden')) {
             window.audioManager?.playBookClose();
             this.diary.classList.add('hidden');
+            
+            if (!hasShownPopup) {
+                console.log('Zobrazuji popup');
+                
+                // Nastavíme počáteční stav
+                popup.style.display = 'block';
+                popup.style.opacity = '1';
+                
+                setTimeout(() => {
+                    const hideOnScroll = () => {
+                        if (this.diary.classList.contains('hidden')) {
+                            console.log('Začínám fadeout popup');
+                            
+                            // Nastavíme opacity přímo
+                            popup.style.opacity = '0';
+                            
+                            // Počkáme na dokončení animace
+                            setTimeout(() => {
+                                popup.style.display = 'none';
+                                hasShownPopup = true;
+                            }, 500);
+                            
+                            document.removeEventListener('wheel', hideOnScroll);
+                        }
+                    };
+                    
+                    document.addEventListener('wheel', hideOnScroll);
+                }, 500);
+            }
         } else {
             window.audioManager?.playBookOpen();
             this.diary.classList.remove('hidden');
