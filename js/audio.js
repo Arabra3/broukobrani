@@ -2,7 +2,7 @@ class AudioManager {
     constructor() {
         console.log('Initializing AudioManager...');
         
-        // Inicializace ambientu
+        // Inicializace ambientu s .mp3 příponou
         this.ambient = new Audio('assets/sounds/ambient.mp3');
         
         // Pole pro zvuky otáčení stránek
@@ -146,10 +146,13 @@ class AudioManager {
     }
 }
 
-document.addEventListener('DOMContentLoaded', () => {
-    console.log('DOM loaded, creating AudioManager...');
-    window.audioManager = new AudioManager();
-});
+// Vytvoříme instanci pouze pokud ještě neexistuje
+if (!window.audioManager) {
+    document.addEventListener('DOMContentLoaded', () => {
+        console.log('DOM loaded, creating AudioManager...');
+        window.audioManager = new AudioManager();
+    });
+}
 
 window.addEventListener('error', (e) => {
     console.error('Global error:', e.error);

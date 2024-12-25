@@ -86,9 +86,7 @@ class Diary {
         console.log('Toggling diary visibility');
         if (!this.diary.classList.contains('hidden')) {
             window.audioManager?.playBookClose();
-            setTimeout(() => {
-                this.diary.classList.add('hidden');
-            }, 100);
+            this.diary.classList.add('hidden');
         } else {
             window.audioManager?.playBookOpen();
             this.diary.classList.remove('hidden');
@@ -220,18 +218,37 @@ function updateFoundCount() {
     }
 }
 
-// Přidáme volání updateFoundCount do insects.js
-window.addEventListener('insectCollected', (event) => {
-    console.log('Event insectCollected zachycen'); // Debug log
-    const insectId = event.detail.insectId;
-    discoverInsect(insectId);
-});
-
+// Jediná inicializace deníku
 let diaryInstance;
 
+// Počkáme na načtení DOM a AudioManager
 document.addEventListener('DOMContentLoaded', () => {
     console.log('DOM loaded, creating diary...');
+    
+    // Vytvoříme instanci deníku
     diaryInstance = new Diary();
     window.diary = diaryInstance;
     updateFoundCount();
+    
+    // Otevřeme deník po krátké prodlevě
+    setTimeout(() => {
+        diaryInstance.openDiary();
+    }, 500);
+});
+
+// Jediný listener pro ikonu deníku
+const diaryIcon = document.querySelector('.diary-icon');
+if (diaryIcon) {
+    diaryIcon.addEventListener('click', () => {
+        if (window.diary) {
+            window.diary.toggleDiary();
+        }
+    });
+}
+
+// Event listener pro sbírání brouků
+window.addEventListener('insectCollected', (event) => {
+    console.log('Event insectCollected zachycen');
+    const insectId = event.detail.insectId;
+    discoverInsect(insectId);
 });
