@@ -527,6 +527,15 @@ document.addEventListener('DOMContentLoaded', function() {
             e.preventDefault();
         }
     });
+
+    // Vyslat event s aktuální pozicí
+    const scrollEvent = new CustomEvent('scroll-update', {
+        detail: {
+            x: this.cameraX,
+            y: this.cameraY
+        }
+    });
+    window.dispatchEvent(scrollEvent);
 });
 
 

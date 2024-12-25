@@ -89,29 +89,27 @@ class Diary {
             if (!hasShownPopup) {
                 console.log('Zobrazuji popup');
                 
-                // Nastavíme počáteční stav
+                // Základní nastavení popupu
                 popup.style.display = 'block';
                 popup.style.opacity = '1';
+                popup.style.transition = 'opacity 0.5s ease';
                 
                 setTimeout(() => {
                     const hideOnScroll = () => {
-                        if (this.diary.classList.contains('hidden')) {
-                            console.log('Začínám fadeout popup');
-                            
-                            // Nastavíme opacity přímo
-                            popup.style.opacity = '0';
-                            
-                            // Počkáme na dokončení animace
-                            setTimeout(() => {
-                                popup.style.display = 'none';
-                                hasShownPopup = true;
-                            }, 500);
-                            
+                        console.log('Scroll detekován');
+                        
+                        // Jednoduchý fadeout
+                        popup.style.opacity = '0';
+                        
+                        // Počkáme na konec animace a pak skryjeme
+                        setTimeout(() => {
+                            popup.style.display = 'none';
+                            hasShownPopup = true;
                             document.removeEventListener('wheel', hideOnScroll);
-                        }
+                        }, 500);
                     };
                     
-                    document.addEventListener('wheel', hideOnScroll);
+                    document.addEventListener('wheel', hideOnScroll, { once: true });
                 }, 500);
             }
         } else {
