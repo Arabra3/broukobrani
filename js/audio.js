@@ -4,6 +4,8 @@ class AudioManager {
         
         // Inicializace ambientu s .mp3 příponou
         this.ambient = new Audio('assets/sounds/ambient.mp3');
+        this.ambient.loop = true;
+        this.ambient.volume = 0.4;
         
         // Pole pro zvuky otáčení stránek
         this.pageturns = [
@@ -156,4 +158,29 @@ if (!window.audioManager) {
 
 window.addEventListener('error', (e) => {
     console.error('Global error:', e.error);
-}); 
+});
+
+// Volume slider
+const volumeSlider = document.getElementById('volumeSlider');
+volumeSlider.addEventListener('input', (e) => {
+    const value = e.target.value;
+    const volume = value * 2.5; // Zvýšíme maximální hlasitost na 250%
+    
+    ambientSound.volume = volume * 0.4;
+    clickSound.volume = volume;
+    hoverSound.volume = volume * 0.3;
+    
+    // Uložení nastavení hlasitosti
+    localStorage.setItem('volume', value);
+});
+
+// Načtení uloženého nastavení hlasitosti
+const savedVolume = localStorage.getItem('volume');
+if (savedVolume !== null) {
+    volumeSlider.value = savedVolume;
+    const volume = savedVolume * 2.5; // Aplikujeme stejný násobitel
+    
+    ambientSound.volume = volume * 0.4;
+    clickSound.volume = volume;
+    hoverSound.volume = volume * 0.3;
+} 

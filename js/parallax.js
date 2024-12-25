@@ -237,9 +237,8 @@ document.addEventListener('DOMContentLoaded', function() {
     let lastDragTime = 0;
     let holdDirection = 0;
 
-    // Sjednocený handler pro oba typy kliknutí
     document.addEventListener('mousedown', (e) => {
-        if (e.button === 0 || e.button === 1) {
+        if (e.button === 1) { // Pouze middle click
             e.preventDefault();
             isDragging = true;
             startX = e.clientX;
