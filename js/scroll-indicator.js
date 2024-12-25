@@ -7,40 +7,32 @@ class ScrollIndicator {
         
         document.addEventListener('parallax-ready', this.initBounds.bind(this));
         this.updatePosition = this.updatePosition.bind(this);
-        
-        const initialScroll = window.innerWidth * 0.21;
-        this.updatePosition({ detail: { scrollLeft: initialScroll } });
     }
     
     initBounds() {
-        const maxScroll = window.innerWidth * 0.42;
+        const initialScroll = window.innerWidth * 0.21;
         this.minX = 0;
-        this.maxX = maxScroll;
+        this.maxX = initialScroll * 2;
+        
+        this.updatePosition({ detail: { scrollLeft: initialScroll } });
         
         window.addEventListener('scroll-update', this.updatePosition);
     }
     
     updatePosition(event) {
         const currentX = event.detail.scrollLeft || 0;
-        const totalWidth = this.maxX - this.minX;
         const trackWidth = this.track.offsetWidth;
         const thumbWidth = this.thumb.offsetWidth;
         
-        // Vypočítáme procentuální pozici scrollu (0-1)
-        const scrollPercent = currentX / totalWidth;
+        const scrollPercent = Math.min(1, Math.max(0, currentX / this.maxX));
         
-        // Vypočítáme maximální pozici thumbu (šířka tracku mínus šířka thumbu)
-        const maxPosition = trackWidth - thumbWidth;
+        const availableWidth = trackWidth - thumbWidth;
         
-        // Vypočítáme finální pozici
-        const position = scrollPercent * maxPosition;
-        
-        // Aplikujeme transformaci
+        const position = scrollPercent * availableWidth;
         this.thumb.style.transform = `translateX(${position}px)`;
     }
 }
 
-// Inicializace po načtení parallax systému
 document.addEventListener('parallax-ready', () => {
     window.scrollIndicator = new ScrollIndicator();
 });

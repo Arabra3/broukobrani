@@ -394,21 +394,21 @@ body {
 }
 
 .scroll-track {
-    width: 100%;
+    width: 50%;
     height: 2px;
     background-color: rgba(255, 255, 255, 0.3);
     border-radius: 1px;
     position: relative;
+    margin: 0 auto;
 }
 
 .scroll-thumb {
-    width: 150px;
-    height: 4px; /* Trochu vyšší než track */
+    width: 30px;
+    height: 3px;
     background-color: white;
-    border-radius: 2px;
+    border-radius: 1px;
     position: absolute;
-    top: 50%; /* Zarovnání na střed */
-    transform: translateY(-50%); /* Vertikální centrování */
+    top: 0;
     left: 0;
     transition: transform 0.1s ease;
 }
