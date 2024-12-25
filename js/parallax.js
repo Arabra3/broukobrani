@@ -237,8 +237,10 @@ document.addEventListener('DOMContentLoaded', function() {
     let lastDragTime = 0;
     let holdDirection = 0;
 
+    // Sjednocený handler pro oba typy kliknutí
     document.addEventListener('mousedown', (e) => {
-        if (e.button === 0) {
+        if (e.button === 0 || e.button === 1) {
+            e.preventDefault();
             isDragging = true;
             startX = e.clientX;
             lastX = e.clientX;
@@ -248,6 +250,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
+    // Původní mousemove handler zůstává beze změny
     document.addEventListener('mousemove', (e) => {
         if (!isDragging) return;
         
@@ -258,15 +261,11 @@ document.addEventListener('DOMContentLoaded', function() {
         const distanceFromStart = e.clientX - startX;
         const absoluteDistance = Math.abs(distanceFromStart);
         
-        // Jemnější mapování vzdálenosti
-        const normalizedDistance = absoluteDistance / 440; // Zvětšený rozsah pro jemnější progresi
-        
-        // Mírnější progresivní křivka
-        const baseMultiplier = Math.min(normalizedDistance * 2.3, 2.7); // Snížené hodnoty
+        const normalizedDistance = absoluteDistance / 440;
+        const baseMultiplier = Math.min(normalizedDistance * 2.3, 2.7);
         const smoothStep = x => x * x * (3 - 2 * x);
         const progressiveMultiplier = smoothStep(Math.min(baseMultiplier / 3, 1)) * 2.7;
         
-        // Jemnější vyhlazení pro rychlé pohyby
         const velocityFactor = Math.min(Math.abs(dragDelta) / timeDelta / 2.2, 1);
         const smoothedMultiplier = progressiveMultiplier * 
             (1 - Math.exp(-normalizedDistance * 1.4)) * 
@@ -277,27 +276,21 @@ document.addEventListener('DOMContentLoaded', function() {
         }
         
         if (timeDelta > 0) {
-            // Snížená základní rychlost
-            const baseVelocity = (dragDelta / timeDelta) * 5.4; // Sníženo z 6
-            
+            const baseVelocity = (dragDelta / timeDelta) * 5.4;
             const velocitySmoothing = Math.max(0.65, 1 - velocityFactor * 0.27);
             const distanceAdjustedVelocity = baseVelocity * (1 + smoothedMultiplier);
-            
-            // Jemnější mixování
             dragVelocity = dragVelocity * velocitySmoothing + 
                           distanceAdjustedVelocity * (1 - velocitySmoothing);
         }
         
         if (holdDirection !== 0) {
-            // Snížená minimální rychlost
             const minHoldSpeed = 4.5 + (smoothedMultiplier * 2.7);
             if (Math.abs(dragVelocity) < minHoldSpeed) {
                 dragVelocity = holdDirection * minHoldSpeed;
             }
         }
         
-        // Snížená maximální rychlost
-        const maxDragSpeed = 25.2 * (1 + smoothedMultiplier * 0.32); // Sníženo z 28
+        const maxDragSpeed = 25.2 * (1 + smoothedMultiplier * 0.32);
         const currentSpeed = Math.abs(dragVelocity);
         if (currentSpeed > maxDragSpeed) {
             const limitFactor = 1 + Math.min((currentSpeed - maxDragSpeed) / 11, 1);
@@ -315,20 +308,23 @@ document.addEventListener('DOMContentLoaded', function() {
         lastDragTime = currentTime;
     });
 
-    document.addEventListener('mouseup', () => {
-        if (isDragging) {
-            isDragging = false;
-            holdDirection = 0;
-            container.style.cursor = 'default';
-            
-            if (Math.abs(dragVelocity) > 0.1) {
-                // Jemnější setrvačnost
-                const finalVelocityMultiplier = Math.min(Math.abs(dragVelocity) / 38, 1);
-                scrollVelocity = dragVelocity * (0.93 + finalVelocityMultiplier * 0.07);
+    // Sjednocený mouseup handler
+    document.addEventListener('mouseup', (e) => {
+        if (e.button === 0 || e.button === 1) {
+            if (isDragging) {
+                isDragging = false;
+                holdDirection = 0;
+                container.style.cursor = 'default';
                 
-                if (!isAutoScrolling) {
-                    isAutoScrolling = true;
-                    requestAnimationFrame(smoothScroll);
+                if (Math.abs(dragVelocity) > 0.1) {
+                    // Snížená setrvačnost o ~15%
+                    const finalVelocityMultiplier = Math.min(Math.abs(dragVelocity) / 34, 1.1); // Sníženo z 1.3
+                    scrollVelocity = dragVelocity * (0.93 + finalVelocityMultiplier * 0.13); // Sníženo z 0.95 a 0.15
+                    
+                    if (!isAutoScrolling) {
+                        isAutoScrolling = true;
+                        requestAnimationFrame(smoothScroll);
+                    }
                 }
             }
         }
@@ -345,7 +341,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 scrollVelocity = dragVelocity;
             }
         } else if (keyPressed) {
-            // Původní logika pro klávesy zůstává stejná
             const acceleration = 0.35;
             const maxSpeed = 22;
             
@@ -360,8 +355,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             }
         } else {
-            // Jemnější dojezd
-            const slowdownFactor = 0.968 + Math.min(Math.abs(scrollVelocity) / 110, 0.018);
+            // Rychlejší útlum pro kratší setrvačnost
+            const slowdownFactor = 0.972 + Math.min(Math.abs(scrollVelocity) / 105, 0.013); // Upraveno z 0.975 a 0.015
             scrollVelocity *= slowdownFactor;
         }
         
@@ -512,6 +507,27 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         }
     }, { passive: true });
+
+    // Zakázání výchozího scroll chování
+    document.addEventListener('wheel', (e) => {
+        if (e.buttons === 4) { // Middle mouse button is pressed
+            e.preventDefault();
+        }
+    }, { passive: false });
+
+    // Zakázání auto-scroll funkce prohlížeče
+    document.addEventListener('auxclick', (e) => {
+        if (e.button === 1) {
+            e.preventDefault();
+        }
+    });
+
+    // Přidání prevence výchozího chování pro middle-click
+    container.addEventListener('mousedown', (e) => {
+        if (e.button === 1) {
+            e.preventDefault();
+        }
+    });
 });
 
 
