@@ -388,7 +388,7 @@ body {
     bottom: 20px;
     left: 50%;
     transform: translateX(-50%);
-    width: 80%;
+    width: 30%;
     z-index: 2000;
     pointer-events: none;
 }
@@ -402,7 +402,7 @@ body {
 }
 
 .scroll-thumb {
-    width: 300px;
+    width: 150px;
     height: 4px; /* Trochu vyšší než track */
     background-color: white;
     border-radius: 2px;

@@ -3,8 +3,13 @@ class ScrollIndicator {
         this.thumb = document.querySelector('.scroll-thumb');
         this.track = document.querySelector('.scroll-track');
         
+        this.initBounds();
+        
         document.addEventListener('parallax-ready', this.initBounds.bind(this));
         this.updatePosition = this.updatePosition.bind(this);
+        
+        const initialScroll = window.innerWidth * 0.21;
+        this.updatePosition({ detail: { scrollLeft: initialScroll } });
     }
     
     initBounds() {
@@ -21,13 +26,16 @@ class ScrollIndicator {
         const trackWidth = this.track.offsetWidth;
         const thumbWidth = this.thumb.offsetWidth;
         
-        // Vypočítáme maximální posun (šířka tracku mínus šířka thumbu)
-        const maxTranslate = trackWidth - thumbWidth;
+        // Vypočítáme procentuální pozici scrollu (0-1)
+        const scrollPercent = currentX / totalWidth;
         
-        // Vypočítáme pozici v pixelech
-        const position = (currentX / totalWidth) * maxTranslate;
+        // Vypočítáme maximální pozici thumbu (šířka tracku mínus šířka thumbu)
+        const maxPosition = trackWidth - thumbWidth;
         
-        // Aplikujeme transformaci na thumb
+        // Vypočítáme finální pozici
+        const position = scrollPercent * maxPosition;
+        
+        // Aplikujeme transformaci
         this.thumb.style.transform = `translateX(${position}px)`;
     }
 }
