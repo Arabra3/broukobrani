@@ -154,10 +154,11 @@ document.addEventListener('DOMContentLoaded', function() {
         e.preventDefault();
         
         const direction = Math.sign(e.deltaY);
-        const speed = Math.min(Math.abs(e.deltaY), 152);
+        const speed = Math.min(Math.abs(e.deltaY), 64);
         const normalizedDelta = direction * speed;
         
-        const targetVelocity = Math.sign(normalizedDelta) * Math.min(Math.abs(normalizedDelta * 0.805), 121);
+        const targetVelocity = Math.sign(normalizedDelta) * 
+            Math.min(Math.abs(normalizedDelta * 0.805), 80);
         
         scrollVelocity = scrollVelocity * 0.915 + targetVelocity * 0.085;
         
@@ -174,7 +175,6 @@ document.addEventListener('DOMContentLoaded', function() {
             const isAtEdge = updatePosition(scrollVelocity);
             
             if (isAtEdge) {
-                // Okamžité zastavení na okraji
                 scrollVelocity = 0;
                 isAutoScrolling = false;
             } else {
@@ -188,13 +188,21 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     
     document.addEventListener('keydown', (e) => {
-        switch(e.key) {
-            case 'ArrowRight':
-                updatePosition(70);
-                break;
-            case 'ArrowLeft':
-                updatePosition(-70);
-                break;
+        if (e.key === 'ArrowRight' || e.key === 'ArrowLeft') {
+            e.preventDefault();
+            
+            const direction = e.key === 'ArrowRight' ? 1 : -1;
+            const normalizedDelta = direction * 65;
+            
+            const targetVelocity = Math.sign(normalizedDelta) * 
+                Math.min(Math.abs(normalizedDelta * 0.805), 85);
+            
+            scrollVelocity = scrollVelocity * 0.915 + targetVelocity * 0.085;
+            
+            if (!isAutoScrolling) {
+                isAutoScrolling = true;
+                autoScroll();
+            }
         }
     });
     
