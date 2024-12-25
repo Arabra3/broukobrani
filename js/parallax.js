@@ -230,10 +230,122 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
+    let isDragging = false;
+    let startX = 0;
+    let lastX = 0;
+    let dragVelocity = 0;
+    let lastDragTime = 0;
+    let holdDirection = 0;
+
+    document.addEventListener('mousedown', (e) => {
+        if (e.button === 0) {
+            isDragging = true;
+            startX = e.clientX;
+            lastX = e.clientX;
+            lastDragTime = performance.now();
+            holdDirection = 0;
+            container.style.cursor = 'grabbing';
+        }
+    });
+
+    document.addEventListener('mousemove', (e) => {
+        if (!isDragging) return;
+        
+        const currentTime = performance.now();
+        const timeDelta = Math.max(currentTime - lastDragTime, 16);
+        const dragDelta = lastX - e.clientX;
+        
+        const distanceFromStart = e.clientX - startX;
+        const absoluteDistance = Math.abs(distanceFromStart);
+        
+        // Jemnější mapování vzdálenosti
+        const normalizedDistance = absoluteDistance / 440; // Zvětšený rozsah pro jemnější progresi
+        
+        // Mírnější progresivní křivka
+        const baseMultiplier = Math.min(normalizedDistance * 2.3, 2.7); // Snížené hodnoty
+        const smoothStep = x => x * x * (3 - 2 * x);
+        const progressiveMultiplier = smoothStep(Math.min(baseMultiplier / 3, 1)) * 2.7;
+        
+        // Jemnější vyhlazení pro rychlé pohyby
+        const velocityFactor = Math.min(Math.abs(dragDelta) / timeDelta / 2.2, 1);
+        const smoothedMultiplier = progressiveMultiplier * 
+            (1 - Math.exp(-normalizedDistance * 1.4)) * 
+            (1 + velocityFactor * 0.27);
+        
+        if (absoluteDistance > 15) {
+            holdDirection = Math.sign(distanceFromStart) * -1;
+        }
+        
+        if (timeDelta > 0) {
+            // Snížená základní rychlost
+            const baseVelocity = (dragDelta / timeDelta) * 5.4; // Sníženo z 6
+            
+            const velocitySmoothing = Math.max(0.65, 1 - velocityFactor * 0.27);
+            const distanceAdjustedVelocity = baseVelocity * (1 + smoothedMultiplier);
+            
+            // Jemnější mixování
+            dragVelocity = dragVelocity * velocitySmoothing + 
+                          distanceAdjustedVelocity * (1 - velocitySmoothing);
+        }
+        
+        if (holdDirection !== 0) {
+            // Snížená minimální rychlost
+            const minHoldSpeed = 4.5 + (smoothedMultiplier * 2.7);
+            if (Math.abs(dragVelocity) < minHoldSpeed) {
+                dragVelocity = holdDirection * minHoldSpeed;
+            }
+        }
+        
+        // Snížená maximální rychlost
+        const maxDragSpeed = 25.2 * (1 + smoothedMultiplier * 0.32); // Sníženo z 28
+        const currentSpeed = Math.abs(dragVelocity);
+        if (currentSpeed > maxDragSpeed) {
+            const limitFactor = 1 + Math.min((currentSpeed - maxDragSpeed) / 11, 1);
+            dragVelocity = Math.sign(dragVelocity) * maxDragSpeed / limitFactor;
+        }
+        
+        if (!isAutoScrolling) {
+            isAutoScrolling = true;
+            requestAnimationFrame(smoothScroll);
+        }
+        
+        scrollVelocity = dragVelocity;
+        
+        lastX = e.clientX;
+        lastDragTime = currentTime;
+    });
+
+    document.addEventListener('mouseup', () => {
+        if (isDragging) {
+            isDragging = false;
+            holdDirection = 0;
+            container.style.cursor = 'default';
+            
+            if (Math.abs(dragVelocity) > 0.1) {
+                // Jemnější setrvačnost
+                const finalVelocityMultiplier = Math.min(Math.abs(dragVelocity) / 38, 1);
+                scrollVelocity = dragVelocity * (0.93 + finalVelocityMultiplier * 0.07);
+                
+                if (!isAutoScrolling) {
+                    isAutoScrolling = true;
+                    requestAnimationFrame(smoothScroll);
+                }
+            }
+        }
+    });
+
     function smoothScroll() {
         if (!isAutoScrolling) return;
         
-        if (keyPressed) {
+        if (isDragging) {
+            if (holdDirection !== 0) {
+                const holdSpeed = Math.max(Math.abs(scrollVelocity), 4.5);
+                scrollVelocity = holdDirection * holdSpeed;
+            } else {
+                scrollVelocity = dragVelocity;
+            }
+        } else if (keyPressed) {
+            // Původní logika pro klávesy zůstává stejná
             const acceleration = 0.35;
             const maxSpeed = 22;
             
@@ -243,16 +355,17 @@ document.addEventListener('DOMContentLoaded', function() {
             
             if (Math.abs(scrollVelocity) < maxSpeed) {
                 scrollVelocity += currentDirection * acceleration;
-                
                 if (Math.abs(scrollVelocity) > maxSpeed) {
                     scrollVelocity = currentDirection * maxSpeed;
                 }
             }
         } else {
-            scrollVelocity *= 0.97;
+            // Jemnější dojezd
+            const slowdownFactor = 0.968 + Math.min(Math.abs(scrollVelocity) / 110, 0.018);
+            scrollVelocity *= slowdownFactor;
         }
         
-        if (Math.abs(scrollVelocity) > 0.05) {
+        if (Math.abs(scrollVelocity) > 0.1) {
             const isAtEdge = updatePosition(scrollVelocity);
             
             if (!isAtEdge) {
@@ -261,13 +374,27 @@ document.addEventListener('DOMContentLoaded', function() {
                 scrollVelocity = 0;
                 isAutoScrolling = false;
                 currentDirection = 0;
+                holdDirection = 0;
             }
         } else {
             scrollVelocity = 0;
             isAutoScrolling = false;
             currentDirection = 0;
+            holdDirection = 0;
         }
     }
+
+    // Zabráníme výběru textu během tažení
+    container.addEventListener('selectstart', (e) => {
+        if (isDragging) {
+            e.preventDefault();
+        }
+    });
+
+    // Přidáme prevenci výchozího chování pro drag
+    container.addEventListener('dragstart', (e) => {
+        e.preventDefault();
+    });
     
     // Ponechat pouze wheel event listener
     container.addEventListener('wheel', handleWheel, { passive: false });
@@ -386,4 +513,5 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }, { passive: true });
 });
+
 
