@@ -44,11 +44,6 @@ class Diary {
     initializeListeners() {
         console.log('Setting up diary listeners...');
         
-        this.diaryIcon.addEventListener('click', () => {
-            console.log('Diary icon clicked');
-            this.toggleDiary();
-        });
-        
         if (this.prevButton) {
             this.prevButton.addEventListener('click', () => {
                 window.audioManager?.playPageSwitch();
@@ -234,17 +229,18 @@ document.addEventListener('DOMContentLoaded', () => {
     setTimeout(() => {
         diaryInstance.openDiary();
     }, 500);
+    
+    // Přesuneme listener pro ikonu deníku sem
+    const diaryIcon = document.querySelector('.diary-icon');
+    if (diaryIcon) {
+        diaryIcon.addEventListener('click', () => {
+            console.log('Diary icon clicked (global listener)');
+            if (window.diary) {
+                window.diary.toggleDiary();
+            }
+        });
+    }
 });
-
-// Jediný listener pro ikonu deníku
-const diaryIcon = document.querySelector('.diary-icon');
-if (diaryIcon) {
-    diaryIcon.addEventListener('click', () => {
-        if (window.diary) {
-            window.diary.toggleDiary();
-        }
-    });
-}
 
 // Event listener pro sbírání brouků
 window.addEventListener('insectCollected', (event) => {

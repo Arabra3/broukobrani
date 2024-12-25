@@ -131,19 +131,30 @@
     display: flex;
     justify-content: center;
     align-items: center;
-}
-
-.undiscovered .diary-right h3,
-.undiscovered .diary-right p {
-    display: none;
+    min-height: 300px;
+    position: relative;
 }
 
 .undiscovered .diary-right::after {
-    content: "?";
-    font-size: 120px;
-    color: rgba(0, 0, 0, 0.3);
-    font-family: "Courier New", monospace;
-    font-weight: bold;
+    content: "";
+    background-image: url('../assets/ui/otaznik.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    width: 250px;
+    height: 250px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    opacity: 1;
+    z-index: 1000;
+}
+
+/* Skryjeme původní obsah */
+.undiscovered .diary-right h3,
+.undiscovered .diary-right p {
+    display: none;
 }
 
 /* Odstraníme všechny potenciálně konfliktní styly */
@@ -332,3 +343,4 @@
     width: auto;
     margin: -8px;
 }
+
