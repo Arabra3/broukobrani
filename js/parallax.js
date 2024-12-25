@@ -191,15 +191,19 @@ document.addEventListener('DOMContentLoaded', function() {
     let currentDirection = 0;
 
     document.addEventListener('keydown', (e) => {
-        if (e.key === 'ArrowRight' || e.key === 'ArrowLeft') {
+        // Přidáme podporu pro A/D i šipky
+        if (e.key === 'ArrowRight' || e.key === 'ArrowLeft' || 
+            e.key === 'd' || e.key === 'a' ||
+            e.key === 'D' || e.key === 'A') { // Podpora i pro velká písmena
+            
             e.preventDefault();
             keyPressed = true;
             
-            const newDirection = e.key === 'ArrowRight' ? 1 : -1;
+            // Určení směru pro všechny podporované klávesy
+            const newDirection = (e.key === 'ArrowRight' || e.key === 'd' || e.key === 'D') ? 1 : -1;
             
-            // Zachováme okamžitou reakci na změnu směru
             if (newDirection !== currentDirection) {
-                scrollVelocity = newDirection * 6; // Nižší počáteční rychlost
+                scrollVelocity = newDirection * 6;
             }
             
             currentDirection = newDirection;
@@ -212,9 +216,14 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     document.addEventListener('keyup', (e) => {
-        if (e.key === 'ArrowRight' || e.key === 'ArrowLeft') {
-            if ((e.key === 'ArrowRight' && currentDirection === 1) ||
-                (e.key === 'ArrowLeft' && currentDirection === -1)) {
+        // Přidáme podporu pro A/D i šipky
+        if (e.key === 'ArrowRight' || e.key === 'ArrowLeft' || 
+            e.key === 'd' || e.key === 'a' ||
+            e.key === 'D' || e.key === 'A') {
+            
+            // Kontrola pro všechny podporované klávesy
+            if ((e.key === 'ArrowRight' || e.key === 'd' || e.key === 'D') && currentDirection === 1 ||
+                (e.key === 'ArrowLeft' || e.key === 'a' || e.key === 'A') && currentDirection === -1) {
                 keyPressed = false;
                 currentDirection = 0;
             }
@@ -225,10 +234,9 @@ document.addEventListener('DOMContentLoaded', function() {
         if (!isAutoScrolling) return;
         
         if (keyPressed) {
-            const acceleration = 0.35; // Jemnější akcelerace
-            const maxSpeed = 20; // Mírně nižší maximální rychlost
+            const acceleration = 0.35;
+            const maxSpeed = 22;
             
-            // Kontrola správného směru
             if (Math.sign(scrollVelocity) !== currentDirection) {
                 scrollVelocity = currentDirection * Math.abs(scrollVelocity);
             }
@@ -241,11 +249,10 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             }
         } else {
-            // Jemnější dojezd
-            scrollVelocity *= 0.97; // Vyšší hodnota = delší dojezd
+            scrollVelocity *= 0.97;
         }
         
-        if (Math.abs(scrollVelocity) > 0.05) { // Snížený práh pro delší dojezd
+        if (Math.abs(scrollVelocity) > 0.05) {
             const isAtEdge = updatePosition(scrollVelocity);
             
             if (!isAtEdge) {
