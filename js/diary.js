@@ -86,30 +86,58 @@ class Diary {
             this.diary.classList.add('hidden');
             
             if (!hasShownPopup) {
-                console.log('Zobrazuji popup');
+                console.log('Čekám na zobrazení popupu...');
                 
-                // Základní nastavení popupu
-                popup.style.display = 'block';
-                popup.style.opacity = '1';
-                popup.style.transition = 'opacity 0.5s ease';
+                // Ujistíme se, že popup je skrytý
+                popup.classList.add('hidden');
+                popup.style.opacity = '0';
                 
+                let hasScrolled = false;
+                
+                // Event listener pro detekci scrollu během čekání
+                const earlyScrollCheck = () => {
+                    hasScrolled = true;
+                    hasShownPopup = true; // Označíme popup jako zobrazený, i když se nezobrazil
+                    document.removeEventListener('wheel', earlyScrollCheck);
+                };
+                
+                document.addEventListener('wheel', earlyScrollCheck);
+                
+                // Přidáme 3s delay před zobrazením popupu
                 setTimeout(() => {
+                    // Odstraníme early scroll listener
+                    document.removeEventListener('wheel', earlyScrollCheck);
+                    
+                    // Pokud už uživatel scrolloval, popup neukážeme
+                    if (hasScrolled) {
+                        console.log('Scroll detekován během čekání, popup nebude zobrazen');
+                        return;
+                    }
+                    
+                    console.log('Zobrazuji popup');
+                    popup.classList.remove('hidden');
+                    
+                    // Použijeme requestAnimationFrame pro plynulý fade-in
+                    requestAnimationFrame(() => {
+                        popup.style.transition = 'opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1)';
+                        popup.style.opacity = '1';
+                    });
+                    
+                    // Event listener pro skrytí při scrollu
                     const hideOnScroll = () => {
                         console.log('Scroll detekován');
-                        
-                        // Jednoduchý fadeout
+                        popup.style.transition = 'opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1)';
                         popup.style.opacity = '0';
                         
-                        // Počkáme na konec animace a pak skryjeme
                         setTimeout(() => {
-                            popup.style.display = 'none';
+                            popup.classList.add('hidden');
                             hasShownPopup = true;
                             document.removeEventListener('wheel', hideOnScroll);
-                        }, 500);
+                        }, 800);
                     };
                     
                     document.addEventListener('wheel', hideOnScroll, { once: true });
-                }, 500);
+                }, 3000); // 3 sekundové zpoždění
             }
         } else {
             window.audioManager?.playBookOpen();
