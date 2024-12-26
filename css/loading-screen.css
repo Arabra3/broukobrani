@@ -5,11 +5,23 @@
     width: 100vw;
     height: 100vh;
     background-color: white;
-    z-index: 9999;
+    z-index: 99999;
     display: flex;
     justify-content: center;
     align-items: center;
     transition: opacity 0.5s ease-out;
+    pointer-events: all;
+    will-change: opacity;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+}
+
+body {
+    visibility: hidden;
+}
+
+body.loaded {
+    visibility: visible;
 }
 
 .loading-screen.hidden {

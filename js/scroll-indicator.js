@@ -20,8 +20,12 @@ class ScrollIndicator {
     }
     
     updatePosition(event) {
-        const currentX = event.detail.scrollLeft || 0;
+        if (!this.track || !this.thumb) return;
+        
         const trackWidth = this.track.offsetWidth;
+        if (!trackWidth) return;
+        
+        const currentX = event.detail.scrollLeft || 0;
         const thumbWidth = this.thumb.offsetWidth;
         
         const scrollPercent = Math.min(1, Math.max(0, currentX / this.maxX));

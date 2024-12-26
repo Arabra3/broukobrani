@@ -77,9 +77,14 @@ class AudioManager {
     }
 
     initializeAudio() {
-        document.addEventListener('click', () => this.tryPlayAudio(), { once: true });
-        document.addEventListener('touchstart', () => this.tryPlayAudio(), { once: true });
-        console.log('Audio initialized, waiting for user interaction');
+        const ambientSound = document.getElementById('ambient-sound');
+        if (!ambientSound) {
+            console.warn('Audio element nebyl nalezen');
+            return;
+        }
+
+        // Zde můžete přidat další inicializační logiku pro audio
+        ambientSound.volume = 0.5; // Například nastavení výchozí hlasitosti
     }
 
     tryPlayAudio() {
@@ -238,3 +243,6 @@ document.addEventListener('DOMContentLoaded', () => {
         window.audioManager.loadMuteState();
     }
 }); 
+
+// Exportujeme funkci do globálního scope
+window.initializeAudio = initializeAudio; 

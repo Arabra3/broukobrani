@@ -3,11 +3,10 @@ class LoadingScreen {
         this.createLoadingScreen();
         this.initializeListeners();
         
-        // Přidáme timeout pro případ, že by se něco zaseklo
         this.timeout = setTimeout(() => {
             console.log('Loading screen timeout - forcing hide');
             this.hide();
-        }, 5000); // 5 sekund maximum
+        }, 8000);
     }
 
     createLoadingScreen() {
@@ -28,13 +27,46 @@ class LoadingScreen {
     }
 
     initializeListeners() {
-        // Počkáme na načtení všech obrázků
+        const parallaxImages = [
+            'assets/parallax/layer1.png',
+            'assets/parallax/layer2.png',
+            'assets/parallax/layer3.png',
+            'assets/parallax/layer4.png',
+            'assets/parallax/layer5.png',
+            'assets/parallax/layer6.png',
+            'assets/parallax/layer7.jpg',
+            'assets/parallax/layer1-shadow.png',
+            'assets/parallax/layer2-shadow.png',
+            'assets/parallax/layer3-shadow.png',
+            'assets/parallax/layer4-shadow.png',
+            'assets/parallax/layer5-shadow.png',
+            'assets/parallax/layer6-shadow.png'
+        ];
+
+        let loadedImages = 0;
+        const totalImages = parallaxImages.length;
+
         Promise.all([
-            ...Array.from(document.images).map(img => {
-                if (img.complete) return Promise.resolve();
-                return new Promise(resolve => {
-                    img.addEventListener('load', resolve);
-                    img.addEventListener('error', resolve);
+            ...parallaxImages.map(src => {
+                return new Promise((resolve) => {
+                    const img = new Image();
+                    img.onload = () => {
+                        loadedImages++;
+                        console.log(`Loaded: ${src} (${loadedImages}/${totalImages})`);
+                        if (loadedImages === totalImages) {
+                            console.log('All parallax images loaded');
+                            setTimeout(() => {
+                                this.hide();
+                            }, 500);
+                        }
+                        resolve();
+                    };
+                    img.onerror = () => {
+                        console.warn(`Failed to load parallax image: ${src}`);
+                        loadedImages++;
+                        resolve();
+                    };
+                    img.src = src;
                 });
             }),
             new Promise(resolve => {
@@ -42,61 +74,47 @@ class LoadingScreen {
                 else this.title.addEventListener('load', resolve);
             })
         ])
-        .then(() => this.checkComponents())
         .catch(error => {
             console.error('Loading error:', error);
             this.hide();
         });
     }
 
-    checkComponents() {
-        let attempts = 0;
-        const maxAttempts = 50; // 5 sekund při 100ms intervalu
-
-        return new Promise((resolve) => {
-            const check = () => {
-                attempts++;
-                
-                // Logujeme stav komponent
-                console.log('Checking components:', {
-                    audioManager: !!window.audioManager,
-                    diary: !!window.diary,
-                    insectSystem: !!window.insectSystem,
-                    attempt: attempts
-                });
-
-                if (window.audioManager && window.diary && window.insectSystem) {
-                    clearTimeout(this.timeout);
-                    resolve();
-                } else if (attempts >= maxAttempts) {
-                    console.warn('Component check timed out - proceeding anyway');
-                    clearTimeout(this.timeout);
-                    resolve();
-                } else {
-                    setTimeout(check, 100);
-                }
-            };
-            
-            check();
-        }).then(() => this.hide());
-    }
-
     hide() {
-        // Zabráníme vícenásobnému volání
         if (this.isHiding) return;
         this.isHiding = true;
 
         console.log('Hiding loading screen');
-        this.screen.classList.add('hidden');
         
-        setTimeout(() => {
-            this.screen.remove();
-            console.log('Loading screen removed');
-        }, 500);
+        // Nejdřív zobrazíme obsah stránky
+        document.body.classList.add('loaded');
+        
+        // Pak teprve skryjeme loading screen
+        requestAnimationFrame(() => {
+            this.screen.classList.add('hidden');
+            
+            if (this.timeout) {
+                clearTimeout(this.timeout);
+            }
+            
+            setTimeout(() => {
+                this.screen.remove();
+                console.log('Loading screen removed');
+                
+                if (window.audioManager) {
+                    console.log('Starting ambient audio...');
+                    window.audioManager.ambient?.play().catch(error => {
+                        console.warn('Could not autoplay ambient:', error);
+                        document.addEventListener('click', () => {
+                            window.audioManager.ambient?.play();
+                        }, { once: true });
+                    });
+                }
+            }, 500);
+        });
     }
 }
 
-// Vytvoříme instanci až po načtení DOM
 document.addEventListener('DOMContentLoaded', () => {
     console.log('Creating LoadingScreen instance');
     window.loadingScreen = new LoadingScreen();

@@ -548,6 +548,9 @@ document.addEventListener('DOMContentLoaded', function() {
     // Po inicializaci všech komponent vyšleme událost
     const readyEvent = new CustomEvent('parallax-ready');
     document.dispatchEvent(readyEvent);
+
+    // Na konci inicializace parallax systému
+    document.dispatchEvent(new CustomEvent('parallax-ready'));
 });
 
 

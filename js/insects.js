@@ -92,6 +92,9 @@ class InsectSystem {
         
         this.initializeInsects();
         this.diary = document.querySelector('.diary-content');
+        
+        // Vyšleme událost o dokončení inicializace
+        window.dispatchEvent(new Event('insectSystemReady'));
     }
     
     createInsectContainer() {
