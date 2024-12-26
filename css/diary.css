@@ -216,93 +216,18 @@
     padding-bottom: 30px;
 }
 
-/* Styly pro volume control - kompletně přepsané */
-.diary-content .volume-control {
-    position: absolute !important;
-    right: 264px !important; /* Posunuto z 252px o dalších ~5% doleva */
-    bottom: 80px !important;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    z-index: 1001;
-    padding: 10px;
-    background: none;
-}
-
-.volume-icon {
-    display: none;
-}
-
-.volume-slider {
-    width: 150px;
-    height: 30px;
-    -webkit-appearance: none;
-    position: relative;
-    background: none;
-    outline: none;
-}
-
-/* Vytvoříme vlastní čáru pomocí pseudo-elementu */
-.volume-slider::before {
-    content: '';
-    position: absolute;
-    left: 0;
-    top: 50%;
-    width: 100%;
-    height: 2px;
-    background-color: black;
-    transform: translateY(-50%);
-}
-
-/* Stylování "tečky" pro různé prohlížeče */
-.volume-slider::-webkit-slider-thumb {
-    -webkit-appearance: none;
-    width: 36px;
-    height: 36px;
-    background: url('../assets/ui/zvuk.png') no-repeat center;
-    background-size: contain;
-    cursor: pointer;
-    border: none;
-    position: relative;
-    z-index: 1;
-}
-
-.volume-slider::-moz-range-thumb {
-    width: 36px;
-    height: 36px;
-    background: url('../assets/ui/zvuk.png') no-repeat center;
-    background-size: contain;
-    cursor: pointer;
-    border: none;
-    position: relative;
-    z-index: 1;
-}
-
-.volume-slider::-ms-thumb {
-    width: 36px;
-    height: 36px;
-    background: url('../assets/ui/zvuk.png') no-repeat center;
-    background-size: contain;
-    cursor: pointer;
-    border: none;
-    position: relative;
-    z-index: 1;
-}
-
-/* Odstraníme výchozí track */
-.volume-slider::-webkit-slider-runnable-track {
-    -webkit-appearance: none;
-    background: transparent;
-}
-
-.volume-slider::-moz-range-track {
-    background: transparent;
-}
-
+/* Odstraníme všechny styly pro volume control */
+.diary-content .volume-control,
+.volume-icon,
+.volume-slider,
+.volume-slider::before,
+.volume-slider::-webkit-slider-thumb,
+.volume-slider::-moz-range-thumb,
+.volume-slider::-ms-thumb,
+.volume-slider::-webkit-slider-runnable-track,
+.volume-slider::-moz-range-track,
 .volume-slider::-ms-track {
-    background: transparent;
-    border: none;
-    color: transparent;
+    display: none;
 }
 
 .diary-right .insect-text {
@@ -346,8 +271,8 @@
 /* Styly pro počítadlo */
 .counter-wrapper {
     position: absolute;
-    right: 130px;
-    top: 21%;
+    right: 200px;
+    top: 19%;
     transform: translateY(-50%);
     display: flex;
     align-items: center;
@@ -359,6 +284,6 @@
 .counter-total {
     height: 40px;
     width: auto;
-    margin: -8px;
+    margin: -10px;
 }
 

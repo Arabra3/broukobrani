@@ -29,7 +29,7 @@ class ScrollIndicator {
         const availableWidth = trackWidth - thumbWidth;
         
         const position = scrollPercent * availableWidth;
-        this.thumb.style.transform = `translateX(${position}px)`;
+        this.thumb.style.transform = `translate(${position}px, -50%)`;
     }
 }
 

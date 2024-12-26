@@ -46,6 +46,10 @@ class AudioManager {
         // Načítat zvuky až když jsou potřeba
         this.sounds = {};
         this.loadQueue = new Set();
+
+        // Přidáme zvukovou ikonu
+        this.isMuted = false;
+        this.initializeSoundIcon();
     }
 
     updateAllVolumes(baseVolume) {
@@ -146,6 +150,49 @@ class AudioManager {
             this.sounds[key] = audio;
         }
     }
+
+    initializeSoundIcon() {
+        const soundIcon = document.createElement('img');
+        soundIcon.className = 'sound-icon';
+        soundIcon.src = 'assets/ui/zvuk.png';
+        document.body.appendChild(soundIcon);
+
+        soundIcon.addEventListener('click', () => {
+            this.toggleMute();
+            soundIcon.src = this.isMuted ? 'assets/ui/zvukmuted.png' : 'assets/ui/zvuk.png';
+            soundIcon.classList.toggle('muted', this.isMuted);
+        });
+    }
+
+    toggleMute() {
+        this.isMuted = !this.isMuted;
+        
+        // Použijeme původní hodnoty hlasitosti
+        if (this.ambient) {
+            this.ambient.volume = this.isMuted ? 0 : (this.baseVolume * 0.3); // 30% základní hlasitosti pro ambient
+        }
+        
+        // Nastavit hlasitost pro všechny zvuky stránek
+        this.pageturns.forEach(sound => {
+            sound.volume = this.isMuted ? 0 : (this.baseVolume * 0.5); // 50% základní hlasitosti
+        });
+        
+        // Nastavit hlasitost pro všechny zvuky psaní
+        this.writings.forEach(sound => {
+            sound.volume = this.isMuted ? 0 : (this.baseVolume * 0.5); // 50% základní hlasitosti
+        });
+        
+        // Nastavit hlasitost pro zvuky knihy
+        this.bookClose.volume = this.isMuted ? 0 : (this.baseVolume * 0.5);
+        this.bookOpen.volume = this.isMuted ? 0 : (this.baseVolume * 0.5);
+        
+        console.log('Audio ' + (this.isMuted ? 'vypnuto' : 'zapnuto'));
+    }
+
+    playSound(soundName) {
+        if (!this.sounds[soundName] || this.isMuted) return;
+        // ... zbytek kódu pro přehrávání ...
+    }
 }
 
 // Vytvoříme instanci pouze pokud ještě neexistuje
@@ -184,3 +231,10 @@ if (savedVolume !== null) {
     clickSound.volume = volume;
     hoverSound.volume = volume * 0.3;
 } 
+
+// V inicializaci
+document.addEventListener('DOMContentLoaded', () => {
+    if (window.audioManager) {
+        window.audioManager.loadMuteState();
+    }
+}); 

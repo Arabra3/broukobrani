@@ -24,7 +24,6 @@ class Diary {
         this.nextButton = document.querySelector('.diary-nav.next');
         
         this.initializeListeners();
-        this.initializeVolumeControl();
         
         // Automaticky otevřeme deník při načtení
         this.goToPage(1);
@@ -187,26 +186,6 @@ class Diary {
         
         if (this.nextButton) {
             this.nextButton.style.display = this.currentPage >= 10 ? 'none' : 'block';
-        }
-    }
-    
-    initializeVolumeControl() {
-        const volumeSlider = document.getElementById('volumeSlider');
-        if (volumeSlider) {
-            // Nastavíme počáteční hodnotu z AudioManageru
-            volumeSlider.value = (window.audioManager?.getVolume() || 0.5) * 100;
-            
-            volumeSlider.addEventListener('input', (e) => {
-                const volume = e.target.value / 100;
-                if (window.audioManager) {
-                    window.audioManager.setVolume(volume);
-                }
-            });
-    
-            // Posloucháme změny hlasitosti z AudioManageru
-            window.addEventListener('volumeChanged', (e) => {
-                volumeSlider.value = e.detail.volume * 100;
-            });
         }
     }
 }

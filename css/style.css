@@ -395,21 +395,41 @@ body {
 
 .scroll-track {
     width: 50%;
-    height: 2px;
-    background-color: rgba(255, 255, 255, 0.3);
-    border-radius: 1px;
+    height: 30px;
+    background: url('../assets/ui/slidercara.png') center/contain no-repeat;
     position: relative;
     margin: 0 auto;
 }
 
 .scroll-thumb {
     width: 30px;
-    height: 3px;
-    background-color: white;
-    border-radius: 1px;
+    height: 30px;
+    background: url('../assets/ui/sliderthumb.png') center/contain no-repeat;
     position: absolute;
-    top: 0;
+    top: 50%;
+    transform: translateY(-50%);
     left: 0;
     transition: transform 0.1s ease;
+}
+
+/* Styly pro zvukovou ikonu */
+.sound-icon {
+    position: fixed;
+    right: 20px;
+    top: 125px;
+    width: 45px;
+    height: 45px;
+    cursor: pointer;
+    z-index: 1000;
+    transition: transform 0.2s ease;
+    filter: drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.35));
+}
+
+.sound-icon:hover {
+    transform: scale(1.1);
+}
+
+.sound-icon.muted {
+    opacity: 0.7;
 }
 
