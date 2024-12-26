@@ -10,6 +10,7 @@
     <link rel="preload" as="image" href="assets/parallax/layer1.png">
     <link rel="preload" as="image" href="assets/ui/denik1.png">
     <link rel="preload" as="audio" href="assets/sounds/ambient.mp3">
+    <link rel="stylesheet" href="css/loading-screen.css">
 </head>
 <body>
     <div class="parallax-container">
@@ -200,5 +201,12 @@
         <source src="assets/sounds/ambient.mp3" type="audio/wav">
     </audio>
     <script src="js/audio.js"></script>
+    <script src="js/loading-screen.js"></script>
+    <script>
+        // Inicializace loading screenu
+        document.addEventListener('DOMContentLoaded', () => {
+            window.loadingScreen = new LoadingScreen();
+        });
+    </script>
 </body>
 </html>
