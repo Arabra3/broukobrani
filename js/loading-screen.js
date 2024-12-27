@@ -1,12 +1,18 @@
 class LoadingScreen {
     constructor() {
-        this.createLoadingScreen();
+        const existingScreen = document.querySelector('.loading-screen');
+        if (existingScreen) {
+            this.screen = existingScreen;
+        } else {
+            this.createLoadingScreen();
+        }
+        
         this.initializeListeners();
         
         this.timeout = setTimeout(() => {
             console.log('Loading screen timeout - forcing hide');
             this.hide();
-        }, 8000);
+        }, 20000);
     }
 
     createLoadingScreen() {
@@ -27,6 +33,16 @@ class LoadingScreen {
     }
 
     initializeListeners() {
+        const diary = document.getElementById('diary');
+        if (diary) {
+            diary.classList.remove('hidden');
+            diary.style.visibility = 'visible';
+        }
+
+        // Počkáme na načtení všech obrázků v deníku
+        const diaryImages = Array.from(diary.getElementsByTagName('img'));
+        
+        // Přidáme parallax obrázky
         const parallaxImages = [
             'assets/parallax/layer1.png',
             'assets/parallax/layer2.png',
@@ -41,77 +57,71 @@ class LoadingScreen {
             'assets/parallax/layer4-shadow.png',
             'assets/parallax/layer5-shadow.png',
             'assets/parallax/layer6-shadow.png'
-        ];
-
-        let loadedImages = 0;
-        const totalImages = parallaxImages.length;
-
-        Promise.all([
-            ...parallaxImages.map(src => {
-                return new Promise((resolve) => {
-                    const img = new Image();
-                    img.onload = () => {
-                        loadedImages++;
-                        console.log(`Loaded: ${src} (${loadedImages}/${totalImages})`);
-                        if (loadedImages === totalImages) {
-                            console.log('All parallax images loaded');
-                            setTimeout(() => {
-                                this.hide();
-                            }, 500);
-                        }
-                        resolve();
-                    };
-                    img.onerror = () => {
-                        console.warn(`Failed to load parallax image: ${src}`);
-                        loadedImages++;
-                        resolve();
-                    };
-                    img.src = src;
-                });
-            }),
-            new Promise(resolve => {
-                if (this.title.complete) resolve();
-                else this.title.addEventListener('load', resolve);
-            })
-        ])
-        .catch(error => {
-            console.error('Loading error:', error);
-            this.hide();
+        ].map(src => {
+            const img = new Image();
+            img.src = src;
+            return img;
         });
+
+        // Spojíme všechny obrázky do jednoho pole
+        const allImages = [...diaryImages, ...parallaxImages];
+        
+        // Funkce pro kontrolu, zda je obrázek načtený
+        const isImageLoaded = img => {
+            if (!img.complete) return false;
+            if (img.naturalWidth === 0) return false;
+            return true;
+        };
+
+        // Funkce pro kontrolu všech obrázků
+        const areAllImagesLoaded = () => {
+            return allImages.every(img => isImageLoaded(img));
+        };
+
+        // Funkce pro kontrolu načtení
+        const checkImages = () => {
+            if (areAllImagesLoaded()) {
+                console.log('Všechny obrázky jsou načtené');
+                setTimeout(() => {
+                    this.hide();
+                }, 500);
+            } else {
+                console.log('Čekám na načtení obrázků...');
+                setTimeout(checkImages, 100);
+            }
+        };
+
+        // Spustíme kontrolu
+        checkImages();
     }
 
     hide() {
         if (this.isHiding) return;
         this.isHiding = true;
 
-        console.log('Hiding loading screen');
-        
-        // Nejdřív zobrazíme obsah stránky
-        document.body.classList.add('loaded');
-        
-        // Pak teprve skryjeme loading screen
-        requestAnimationFrame(() => {
-            this.screen.classList.add('hidden');
+        setTimeout(() => {
+            document.body.classList.add('loaded');
             
-            if (this.timeout) {
-                clearTimeout(this.timeout);
-            }
-            
-            setTimeout(() => {
-                this.screen.remove();
-                console.log('Loading screen removed');
+            requestAnimationFrame(() => {
+                this.screen.classList.add('hidden');
                 
-                if (window.audioManager) {
-                    console.log('Starting ambient audio...');
-                    window.audioManager.ambient?.play().catch(error => {
-                        console.warn('Could not autoplay ambient:', error);
-                        document.addEventListener('click', () => {
-                            window.audioManager.ambient?.play();
-                        }, { once: true });
-                    });
+                if (this.timeout) {
+                    clearTimeout(this.timeout);
                 }
-            }, 500);
-        });
+                
+                setTimeout(() => {
+                    this.screen.remove();
+                    console.log('Loading screen removed');
+                    
+                    if (window.audioManager) {
+                        console.log('Starting ambient audio...');
+                        window.audioManager.ambient?.play().catch(error => {
+                            console.warn('Could not autoplay ambient:', error);
+                        });
+                    }
+                }, 1000);
+            });
+        }, 100);
     }
 }
 

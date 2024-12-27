@@ -4,6 +4,30 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Broukobraní</title>
+    
+    <style>
+        body {
+            visibility: hidden;
+            margin: 0;
+            background-color: white !important;
+        }
+        
+        .loading-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background-color: white;
+            z-index: 99999;
+            visibility: visible;
+        }
+
+        #diary {
+            visibility: hidden;
+        }
+    </style>
+
     <link rel="stylesheet" href="css/parallax.css">
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/diary.css">
@@ -12,6 +36,12 @@
     <link rel="stylesheet" href="css/loading-screen.css">
 </head>
 <body>
+    <div class="loading-screen">
+        <div class="loading-content">
+            <img src="assets/ui/title.png" class="loading-title" alt="Title">
+        </div>
+    </div>
+
     <div class="parallax-container">
         <div class="sky-layer parallax-layer"></div>
         

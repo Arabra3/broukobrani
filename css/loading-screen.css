@@ -9,15 +9,9 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    opacity: 1;
     transition: opacity 0.5s ease-out;
     pointer-events: all;
-    will-change: opacity;
-    backface-visibility: hidden;
-    -webkit-backface-visibility: hidden;
-}
-
-body {
-    visibility: hidden;
 }
 
 body.loaded {
